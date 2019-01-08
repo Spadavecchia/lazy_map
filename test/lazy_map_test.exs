@@ -10,4 +10,10 @@ defmodule LazyMapTest do
     lm = LazyMap.new(%{first: "hello", second: "world"})
     assert 2 == Enum.count(lm)
   end
+
+  test "values can be retrieved with the `map[key]` syntax" do
+    lm = LazyMap.new(%{first: "hello", second: "world"})
+    assert "hello" == lm[:first]
+    assert nil == lm[:non_exists]
+  end
 end

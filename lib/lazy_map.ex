@@ -19,6 +19,10 @@ defmodule LazyMap do
     Map.keys(map)
   end
 
+  def fetch(%LazyMap{map: map}, key) do
+    Map.fetch(map, key)
+  end
+
   defimpl Enumerable do
     def count(lazy_map) do
       {:ok, LazyMap.size(lazy_map)}
