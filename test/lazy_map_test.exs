@@ -15,11 +15,17 @@ defmodule LazyMapTest do
     lm = LazyMap.new(%{first: "hello", second: "world"})
     assert "hello" == lm[:first]
     assert nil == lm[:non_exists]
+
+    lm = LazyMap.new(%{"first" => "hello", "second" => "world"})
+    assert "hello" == lm["first"]
   end
 
   test "lazy values can be retrieved with the `map[key]` syntax" do
     lm = LazyMap.new(%{first: fn -> "hello" end})
     assert "hello" == lm[:first]
     assert nil == lm[:non_exists]
+
+    lm = LazyMap.new(%{"first" => fn -> "hello" end})
+    assert "hello" == lm["first"]
   end
 end
