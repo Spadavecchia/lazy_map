@@ -20,8 +20,14 @@ defmodule LazyMap do
   end
 
   def fetch(%LazyMap{map: map}, key) do
-    Map.fetch(map, key)
+    do_fetch(Map.fetch(map, key))
   end
+
+  defp do_fetch({:ok, fun}) when is_function(fun) do
+    {:ok, fun.()}
+  end
+
+  defp do_fetch(value), do: value
 
   defimpl Enumerable do
     def count(lazy_map) do
