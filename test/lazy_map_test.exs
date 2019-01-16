@@ -1,6 +1,28 @@
 defmodule LazyMapTest do
   use ExUnit.Case
 
+  defmodule ExternalModule do
+    def get_providers(product_name) do
+      products = %{
+        "Cheese" => %{
+          "providers" => [
+            %{"name" => "Best Cheese"},
+            %{"name" => "Better Cheese"},
+            %{"name" => "Amazing Cheese"}
+          ]
+        },
+        "Chocolate" => %{
+          "providers" => [
+            %{"name" => "Best Chocolate"},
+            %{"name" => "Better Chocolate"}
+          ]
+        }
+      }
+
+      products[product_name]
+    end
+  end
+
   test "create an empty map" do
     lm = LazyMap.new()
     assert Enum.empty?(lm)
@@ -27,5 +49,16 @@ defmodule LazyMapTest do
 
     lm = LazyMap.new(%{"first" => fn -> "hello" end})
     assert "hello" == lm["first"]
+  end
+
+  test "get the data calling a function declared in an external module" do
+    lm = LazyMap.new(%{providers: fn -> ExternalModule.get_providers("Chocolate") end})
+
+    assert %{
+             "providers" => [
+               %{"name" => "Best Chocolate"},
+               %{"name" => "Better Chocolate"}
+             ]
+           } == lm[:providers]
   end
 end
