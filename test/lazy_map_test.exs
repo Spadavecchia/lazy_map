@@ -1,8 +1,9 @@
 defmodule LazyMapTest do
   use ExUnit.Case
+  alias Test.Support.ServerMock
 
   defmodule ExternalModule do
-    def get_providers(product_name) do
+    def providers(product_name) do
       products = %{
         "Cheese" => %{
           "providers" => [
@@ -52,7 +53,18 @@ defmodule LazyMapTest do
   end
 
   test "get the data calling a function declared in an external module" do
-    lm = LazyMap.new(%{providers: fn -> ExternalModule.get_providers("Chocolate") end})
+    lm = LazyMap.new(%{providers: fn -> ExternalModule.providers("Chocolate") end})
+
+    assert %{
+             "providers" => [
+               %{"name" => "Best Chocolate"},
+               %{"name" => "Better Chocolate"}
+             ]
+           } == lm[:providers]
+  end
+
+  test "get the data calling a function running a GenServer" do
+    lm = LazyMap.new(%{providers: fn -> ServerMock.providers("Chocolate") end})
 
     assert %{
              "providers" => [
