@@ -73,4 +73,23 @@ defmodule LazyMapTest do
              ]
            } == lm[:providers]
   end
+
+  test "get the data calling a web server" do
+    lm =
+      LazyMap.new(%{
+        providers: fn ->
+          {:ok, %{body: json}} =
+            HTTPoison.get("http://localhost:4004/providers?product_name=Chocolate")
+
+          Poison.decode!(json)
+        end
+      })
+
+    assert %{
+             "providers" => [
+               %{"name" => "Best Chocolate"},
+               %{"name" => "Better Chocolate"}
+             ]
+           } == lm[:providers]
+  end
 end

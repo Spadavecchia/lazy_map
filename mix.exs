@@ -26,7 +26,10 @@ defmodule LazyMap.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:credo, "~> 1.0"}
+      {:credo, "~> 1.0"},
+      {:httpoison, "~> 1.0", only: :test},
+      {:plug_cowboy, "~> 2.0", only: :test},
+      {:poison, "~> 3.1", only: :test}
     ]
   end
 end
