@@ -1,28 +1,6 @@
 defmodule LazyMapTest do
   use ExUnit.Case
-  alias Test.Support.ServerMock
-
-  defmodule ExternalModule do
-    def providers(product_name) do
-      products = %{
-        "Cheese" => %{
-          "providers" => [
-            %{"name" => "Best Cheese"},
-            %{"name" => "Better Cheese"},
-            %{"name" => "Amazing Cheese"}
-          ]
-        },
-        "Chocolate" => %{
-          "providers" => [
-            %{"name" => "Best Chocolate"},
-            %{"name" => "Better Chocolate"}
-          ]
-        }
-      }
-
-      products[product_name]
-    end
-  end
+  alias Test.Support.{DBMock, ServerMock}
 
   test "create an empty map" do
     lm = LazyMap.new()
@@ -53,7 +31,7 @@ defmodule LazyMapTest do
   end
 
   test "get the data calling a function declared in an external module" do
-    lm = LazyMap.new(%{providers: fn -> ExternalModule.providers("Chocolate") end})
+    lm = LazyMap.new(%{providers: fn -> DBMock.providers("Chocolate") end})
 
     assert %{
              "providers" => [

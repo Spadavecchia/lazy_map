@@ -1,22 +1,7 @@
 defmodule Test.Support.WebServerMock do
   @moduledoc false
   use Plug.Router
-
-  @products %{
-    "Cheese" => %{
-      "providers" => [
-        %{"name" => "Best Cheese"},
-        %{"name" => "Better Cheese"},
-        %{"name" => "Amazing Cheese"}
-      ]
-    },
-    "Chocolate" => %{
-      "providers" => [
-        %{"name" => "Best Chocolate"},
-        %{"name" => "Better Chocolate"}
-      ]
-    }
-  }
+  alias Test.Support.DBMock
 
   plug(Plug.Parsers,
     parsers: [:json],
@@ -29,6 +14,6 @@ defmodule Test.Support.WebServerMock do
 
   get("/providers") do
     product_name = conn.params["product_name"]
-    Plug.Conn.send_resp(conn, 200, Poison.encode!(@products[product_name]))
+    Plug.Conn.send_resp(conn, 200, Poison.encode!(DBMock.providers(product_name)))
   end
 end
