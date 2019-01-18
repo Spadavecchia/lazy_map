@@ -1,3 +1,5 @@
+File.rm_rf("./db")
+File.mkdir_p("./db")
 Test.Support.ServerMock.start_link()
 Test.Support.WebServerApplication.start([], [])
 ExUnit.start()

@@ -70,4 +70,30 @@ defmodule LazyMapTest do
              ]
            } == lm[:providers]
   end
+
+  test "get the data from a serialized LazyMap simulating a remote call" do
+    lm = :rpc.call(:nonode@nohost, Test.Support.SerializeLazy, :generate_lazy, [])
+
+    assert %{
+             "providers" => [
+               %{"name" => "Best Chocolate"},
+               %{"name" => "Better Chocolate"}
+             ]
+           } == lm[:providers]
+  end
+
+  test "get the data from a serialized LazyMap saved in disk" do
+    file_name = "./db/saved_lazy_map"
+    lm = :rpc.call(:nonode@nohost, Test.Support.SerializeLazy, :generate_lazy, [])
+    File.write!(file_name, :erlang.term_to_binary(lm))
+
+    lm_from_disk = file_name |> File.read!() |> :erlang.binary_to_term()
+
+    assert %{
+      "providers" => [
+      %{"name" => "Best Chocolate"},
+      %{"name" => "Better Chocolate"}
+    ]
+    } == lm_from_disk[:providers]
+  end
 end
