@@ -90,10 +90,25 @@ defmodule LazyMapTest do
     lm_from_disk = file_name |> File.read!() |> :erlang.binary_to_term()
 
     assert %{
-      "providers" => [
-      %{"name" => "Best Chocolate"},
-      %{"name" => "Better Chocolate"}
-    ]
-    } == lm_from_disk[:providers]
+             "providers" => [
+               %{"name" => "Best Chocolate"},
+               %{"name" => "Better Chocolate"}
+             ]
+           } == lm_from_disk[:providers]
+  end
+
+  test "get the data from a serialized LazyMap saved in ets" do
+    table = :ets.new(:lazy_maps, [:set, :private])
+    lm = :rpc.call(:nonode@nohost, Test.Support.SerializeLazy, :generate_lazy, [])
+    :ets.insert(table, {:lm, lm})
+
+    [lm: lm_from_ets] = :ets.lookup(table, :lm)
+
+    assert %{
+             "providers" => [
+               %{"name" => "Best Chocolate"},
+               %{"name" => "Better Chocolate"}
+             ]
+           } == lm_from_ets[:providers]
   end
 end
