@@ -23,6 +23,16 @@ defmodule LazyMap do
     do_fetch(Map.fetch(map, key))
   end
 
+  def get_and_update(%LazyMap{map: map}, key, fun) do
+    {value, map} = Map.get_and_update(map, key, fun)
+    {value, LazyMap.new(map)}
+  end
+
+  def pop(%LazyMap{map: map}, key) do
+    {value, map} = Map.pop(map, key)
+    {value, LazyMap.new(map)}
+  end
+
   defp do_fetch({:ok, fun}) when is_function(fun) do
     {:ok, fun.()}
   end

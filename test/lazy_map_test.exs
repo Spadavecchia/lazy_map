@@ -111,4 +111,9 @@ defmodule LazyMapTest do
              ]
            } == lm_from_ets[:providers]
   end
+
+  test "can be updated using kernel.put_in" do
+    lm = LazyMap.new(%{hello: :world})
+    assert %LazyMap{map: %{hello: :nothing}} = put_in(lm, [:hello], :nothing)
+  end
 end
