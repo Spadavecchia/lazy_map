@@ -121,4 +121,9 @@ defmodule LazyMapTest do
     lm = LazyMap.new(%{hello: :world})
     assert %LazyMap{map: %{hello: :nothing}} = put_in(lm, [:hello], :nothing)
   end
+
+  test "can be updated using kernel.update_in/3" do
+    lm = LazyMap.new(%{hello: :world})
+    assert %LazyMap{map: %{hello: :nothing}} = update_in(lm, [:hello], fn _ -> :nothing end)
+  end
 end
