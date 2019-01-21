@@ -140,4 +140,11 @@ defmodule LazyMapTest do
     assert %LazyMap{map: %{hello: %LazyMap{map: %{my: %{friend: :nothing}}}}} =
              update_in(lm, [:hello, :my, :friend], fn _ -> :nothing end)
   end
+
+  test "can be called with Kernel.pop_in/2" do
+    lm = LazyMap.new(%{hello: LazyMap.new(%{my: %{friend: :world}})})
+
+    assert {:world, %LazyMap{map: %{hello: %LazyMap{map: %{my: %{}}}}}} =
+             pop_in(lm, [:hello, :my, :friend])
+  end
 end
