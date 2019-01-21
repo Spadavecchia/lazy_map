@@ -148,10 +148,17 @@ defmodule LazyMapTest do
              pop_in(lm, [:hello, :my, :friend])
   end
 
+  test "can be accessed using kernel.get_and_update_in/2" do
+    lm = LazyMap.new(%{hello: :world})
+
+    assert {:world, %LazyMap{map: %{hello: :nothing}}} =
+             get_and_update_in(lm, [:hello], fn value -> {value, :nothing} end)
+  end
+
   test "can be called with Kernel.get_and_update_in/3" do
     lm = LazyMap.new(%{hello: LazyMap.new(%{my: %{friend: :world}})})
 
     assert {:world, %LazyMap{map: %{hello: %LazyMap{map: %{my: %{friend: :nothing}}}}}} =
-      get_and_update_in(lm, [:hello, :my, :friend], fn value -> {value, :nothing} end)
+             get_and_update_in(lm, [:hello, :my, :friend], fn value -> {value, :nothing} end)
   end
 end
