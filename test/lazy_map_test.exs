@@ -118,7 +118,7 @@ defmodule LazyMapTest do
   end
 
   test "can be accessed to deep level using kernel.get_in/2" do
-    lm = LazyMap.new(%{hello: LazyMap.new(%{my: %{friend: :world}})})
+    lm = LazyMap.new(%{hello: fn -> LazyMap.new(%{my: fn -> %{friend: :world} end}) end})
     assert :world = get_in(lm, [:hello, :my, :friend])
   end
 
