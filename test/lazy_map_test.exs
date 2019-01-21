@@ -30,6 +30,18 @@ defmodule LazyMapTest do
     assert "hello" == lm["first"]
   end
 
+  test "lazy value can be configured as {Module, Function, Arguments}" do
+    lm = LazyMap.new(%{hello: {Test.Support.DBMock, :providers, ["Cheese"]}})
+
+    assert %{
+             "providers" => [
+               %{"name" => "Best Cheese"},
+               %{"name" => "Better Cheese"},
+               %{"name" => "Amazing Cheese"}
+             ]
+           } = lm[:hello]
+  end
+
   test "get the data calling a function declared in an external module" do
     lm = LazyMap.new(%{providers: fn -> DBMock.providers("Chocolate") end})
 

@@ -23,6 +23,17 @@ defmodule LazyMap do
     do_fetch(Map.fetch(map, key))
   end
 
+  defp do_fetch({:ok, fun}) when is_function(fun) do
+    {:ok, fun.()}
+  end
+
+  defp do_fetch({:ok, {module, fun, args}})
+       when is_atom(module) and is_atom(fun) and is_list(args) do
+    {:ok, apply(module, fun, args)}
+  end
+
+  defp do_fetch(value), do: value
+
   def get_and_update(%LazyMap{map: map}, key, fun) do
     {value, map} = Map.get_and_update(map, key, fun)
     {value, LazyMap.new(map)}
@@ -32,12 +43,6 @@ defmodule LazyMap do
     {value, map} = Map.pop(map, key)
     {value, LazyMap.new(map)}
   end
-
-  defp do_fetch({:ok, fun}) when is_function(fun) do
-    {:ok, fun.()}
-  end
-
-  defp do_fetch(value), do: value
 
   defimpl Enumerable do
     def count(lazy_map) do
