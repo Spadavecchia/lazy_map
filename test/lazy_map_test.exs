@@ -117,6 +117,11 @@ defmodule LazyMapTest do
     assert :world = get_in(lm, [:hello])
   end
 
+  test "can be accessed to deep level using kernel.get_in/2" do
+    lm = LazyMap.new(%{hello: LazyMap.new(%{my: %{friend: :world}})})
+    assert :world = get_in(lm, [:hello, :my, :friend])
+  end
+
   test "can be updated using kernel.put_in/3" do
     lm = LazyMap.new(%{hello: :world})
     assert %LazyMap{map: %{hello: :nothing}} = put_in(lm, [:hello], :nothing)
