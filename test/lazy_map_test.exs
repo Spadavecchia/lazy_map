@@ -42,6 +42,11 @@ defmodule LazyMapTest do
            } = lm[:hello]
   end
 
+  test "raises UndefinedFunctionError when invoked function doesn't exists" do
+    lm = LazyMap.new(%{hello: {SampleModule, :sample_function, []}})
+    assert_raise UndefinedFunctionError, fn -> lm[:hello] end
+  end
+
   test "get the data calling a function declared in an external module" do
     lm = LazyMap.new(%{providers: fn -> DBMock.providers("Chocolate") end})
 
