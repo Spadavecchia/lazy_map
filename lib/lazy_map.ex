@@ -19,6 +19,10 @@ defmodule LazyMap do
     Map.keys(map)
   end
 
+  def member?(%LazyMap{map: map}, value) do
+    match?(%{^value => _}, map)
+  end
+
   def fetch(%LazyMap{map: map}, key) do
     do_fetch(Map.fetch(map, key))
   end
@@ -49,8 +53,8 @@ defmodule LazyMap do
       {:ok, LazyMap.size(lazy_map)}
     end
 
-    def member?(%LazyMap{map: map}, value) do
-      {:ok, match?(%{^value => _}, map)}
+    def member?(lazy_map, value) do
+      {:ok, LazyMap.member?(lazy_map, value)}
     end
 
     def slice(lazy_map) do
