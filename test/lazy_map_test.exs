@@ -18,6 +18,11 @@ defmodule LazyMapTest do
     refute Enum.member?(lm, :second)
   end
 
+  test "reduce values in a LazyMap" do
+    lm = LazyMap.new(%{one: fn -> 1 end, two: fn -> 2 end, three: fn -> 3 end})
+    assert 6 == Enum.reduce(lm, 0, fn {_key, value}, acum -> acum + value end)
+  end
+
   test "values can be retrieved with the `map[key]` syntax" do
     lm = LazyMap.new(%{first: "hello", second: "world"})
     assert "hello" == lm[:first]

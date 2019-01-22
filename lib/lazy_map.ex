@@ -16,7 +16,10 @@ defmodule LazyMap do
   end
 
   def to_list(%LazyMap{map: map}) do
-    Map.keys(map)
+    Enum.map(map, fn {key, value} ->
+      {:ok, real_value} = do_fetch({:ok, value})
+      {key, real_value}
+    end)
   end
 
   def member?(%LazyMap{map: map}, value) do
@@ -61,8 +64,8 @@ defmodule LazyMap do
       {:ok, LazyMap.size(lazy_map), &Enumerable.List.slice(LazyMap.to_list(lazy_map), &1, &2)}
     end
 
-    # def reduce(lazy_map, acc, fun) do
-    #   lazy_map
-    # end
+    def reduce(lazy_map, acc, fun) do
+      Enumerable.List.reduce(LazyMap.to_list(lazy_map), acc, fun)
+    end
   end
 end
