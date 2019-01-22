@@ -49,8 +49,9 @@ defmodule LazyMap do
       {:ok, LazyMap.size(lazy_map)}
     end
 
-    # def member?(lazy_map, val) do
-    # end
+    def member?(%LazyMap{map: map}, value) do
+      {:ok, match?(%{^value => _}, map)}
+    end
 
     def slice(lazy_map) do
       {:ok, LazyMap.size(lazy_map), &Enumerable.List.slice(LazyMap.to_list(lazy_map), &1, &2)}

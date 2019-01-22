@@ -12,6 +12,12 @@ defmodule LazyMapTest do
     assert 2 == Enum.count(lm)
   end
 
+  test "check if a value is member of a LazyMap" do
+    lm = LazyMap.new(%{first: fn -> "hello" end})
+    assert Enum.member?(lm, :first)
+    refute Enum.member?(lm, :second)
+  end
+
   test "values can be retrieved with the `map[key]` syntax" do
     lm = LazyMap.new(%{first: "hello", second: "world"})
     assert "hello" == lm[:first]
